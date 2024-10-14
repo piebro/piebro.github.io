@@ -64,7 +64,6 @@
 
     hr {
       margin: 2.5em 0 2.5em 0;
-      border-top: 1px solid #eee;
     }
 
     .tag {
@@ -115,6 +114,33 @@
       width: 24%;
       height: auto;
     }
+
+    /* Update these styles */
+    .sort-buttons {
+      text-align: center;
+      margin: 1em 0 -1.0em;
+      padding-top: 1em;
+    }
+
+    .sort-buttons button {
+      margin: 0 0.25em;
+      padding: 0.3em 0.7em; /* Increased padding */
+      background-color: #555;
+      color: #fff;
+      border: none;
+      font-size: 0.85em; /* Increased font size */
+      border-radius: 0.25em;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .sort-buttons button:hover {
+      background-color: #666;
+    }
+
+    .sort-buttons button.active {
+      background-color: #fa6432;
+    }
   </style>
 </head>
 
@@ -157,11 +183,68 @@
         }
       });
     });
+
+    function sortProjects(sortBy) {
+      const projectsContainer = document.querySelector('.projects-container');
+      const projects = Array.from(projectsContainer.querySelectorAll('.project'));
+      projects.sort((a, b) => {
+        if (sortBy === 'date') {
+          const dateA = parseDate(a.querySelector('h2 small')?.textContent.trim());
+          const dateB = parseDate(b.querySelector('h2 small')?.textContent.trim());
+          return dateB - dateA;
+        } else if (sortBy === 'stars') {
+          const starsA = parseInt(a.querySelector('.tag.star')?.textContent.match(/\d+/)?.[0] || '0');
+          const starsB = parseInt(b.querySelector('.tag.star')?.textContent.match(/\d+/)?.[0] || '0');
+          return starsB - starsA;
+        } else if (sortBy === 'name') {
+          const nameA = a.querySelector('h2')?.firstChild?.textContent || '';
+          const nameB = b.querySelector('h2')?.firstChild?.textContent || '';
+          return nameA.localeCompare(nameB);
+        }
+        return 0;
+      });
+
+      // Clear existing projects and append sorted ones
+      projectsContainer.innerHTML = '';
+      projects.forEach(project => projectsContainer.appendChild(project));
+
+      // Update button colors
+      updateButtonColors(sortBy);
+    }
+
+    function updateButtonColors(activeButton) {
+      const buttons = document.querySelectorAll('.sort-buttons button');
+      buttons.forEach(button => {
+        if (button.id === `sort${activeButton.charAt(0).toUpperCase() + activeButton.slice(1)}`) {
+          button.classList.add('active');
+        } else {
+          button.classList.remove('active');
+        }
+      });
+    }
+
+    function parseDate(dateString) {
+      const months = {
+        'January': 0, 'Februar': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
+        'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11,
+        'Januar': 0, 'Februar': 1, 'März': 2, 'Mai': 4, 'Juni': 5,
+        'Juli': 6, 'Oktober': 9, 'Dezember': 11
+      };
+
+      const [month, year] = dateString.split(' ');
+      return new Date(parseInt(year), months[month]);
+    }
+
+    document.getElementById('sortDate').addEventListener('click', () => sortProjects('date'));
+    document.getElementById('sortStars').addEventListener('click', () => sortProjects('stars'));
+    document.getElementById('sortName').addEventListener('click', () => sortProjects('name'));
+
+    sortProjects('date');
   });
 </script>
 
-
 <body>
+
 <p>
   Hey! My name is Piet Brömmel.
   I am a Data Scientist at Fraunhofer IML and I live in Düsseldorf, Germany.
@@ -176,485 +259,494 @@
 </p>
 
 
-<div class="project">
-  <hr>
-  <h2>Factorio Blueprint Visualizer <small>November 2021</small></h2>
-  <a href="https://github.com/piebro/factorio-blueprint-visualizer/stargazers" class="tag star"><span class="star-icon">&#9733;</span>139</a>
-  <a href="?tag=Factorio" class="tag">Factorio</a>
-  <a href="?tag=Online Tool" class="tag">Online Tool</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <div class="bottom-img-flex">
-    <div class="content-text">
-      <p>
-        I love the game Factorio, and I really like the look of blueprints after tweaking them for perfection or factories after growing them for many hours.
-        That's why I built an online tool to artfully visualize these factories and blueprints using randomized styles.
-        You can open the website and paste a blueprint string or book to visualize it.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/factorio-blueprint-visualizer?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/factorio-blueprint-visualizer?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="bottom-image">
-      <img src="images/factorio-blueprint-visualizer_example_27.jpg" alt="Example image of generative art.">
-      <img src="images/factorio-blueprint-visualizer_example_21.jpg" alt="Example image of generative art.">
-      <img src="images/factorio-blueprint-visualizer_example_02.jpg" alt="Example image of generative art.">
-      <img src="images/factorio-blueprint-visualizer_random_0077.jpg" alt="Example image of generative art.">
-    </div>
-  </div>
+<div class="sort-buttons">
+  <button id="sortDate">Sort by Date</button>
+  <button id="sortStars">Sort by Stars</button>
+  <button id="sortName">Sort by Name</button>
 </div>
 
-<div class="project">
-  <hr>
-  <h2>OpenStreetMap Statistics <small>November 2022</small></h2>
-  <a href="https://github.com/piebro/openstreetmap-statistics/stargazers" class="tag star"><span class="star-icon">&#9733;</span>34</a>
-  <a href="?tag=OpenStreetMap" class="tag">OpenStreetMap</a>
-  <a href="?tag=Statistics" class="tag">Statistics</a>
-  <a href="?tag=Open Data" class="tag">Open Data</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        OpenStreetMap is like Wikipedia but for maps, where everyone can contribute to create a map of the world.
-        This project calculates many different statistics about OpenStreetMap and its contributors.
-        The dataset with plots and tables is updated automatically each month.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/openstreetmap-statistics?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/openstreetmap-statistics?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="right-image" style="flex: 0 0 40%;">
-      <img src="images/openstreetmap-statistics_general_contributor_count_attrition_rate_yearly.png" alt="Barplot of the yearly contributor attrition rate in OSM.">
+<div class="projects-container">
+
+  <div class="project">
+    <hr>
+    <h2>Cutout Textures <small>September 2024</small></h2>
+    <a href="https://github.com/piebro/cutout-textures/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <a href="?tag=Text To Image" class="tag">Text To Image</a>
+    <a href="?tag=LLM" class="tag">LLM</a>
+    <div class="bottom-img-flex">
+      <div class="content-text">
+        <p>
+          A project to create textures by placing cutouts onto a grid with various transformations and randomness.
+          The cutouts are created using Flux.1 [dev] (a text to image model) and the background of each image is automatically removed using another model.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/cutout-textures?ref=piebro.github.io">GitHub</a>
+        </p>
+      </div>
+      <div class="bottom-image">
+        <img src="images/cutout-textures_Tourmaline_crystal,_watermelon_colors,_long_prismatic_form_01_03.png" alt="Example Cutout Texture image.">
+        <img src="images/cutout-textures_a_photo_of_a_big_squid_00_04.png" alt="Example Cutout Texture image.">
+        <img src="images/cutout-textures_a_photo_of_a_coral_01_06.png" alt="Example Cutout Texture image.">
+        <img src="images/cutout-textures_a_photo_of_a_whale_shark_00_07.png" alt="Example Cutout Texture image.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Plotting Maps <small>December 2023</small></h2>
-  <a href="https://github.com/piebro/plotting-maps/stargazers" class="tag star"><span class="star-icon">&#9733;</span>43</a>
-  <a href="?tag=OpenStreetMap" class="tag">OpenStreetMap</a>
-  <a href="?tag=Online Tool" class="tag">Online Tool</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        This is an online tool to easily use OpenStreetMap to create custom maps.
-        You can upload OSM exports and render them as SVGs consisting only of lines of different objects, making it very pen plotter friendly.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/plotting-maps?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/plotting-maps?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="right-image" style="flex: 0 0 45%;">
-      <img src="images/plotting-maps_plotter_image.jpg" alt="Image of pen plotter plotting a map.">
+  <div class="project">
+    <hr>
+    <h2>Podcast Statistics <small>September 2024</small></h2>
+    <a href="https://github.com/piebro/podcast-statistics/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=LLM" class="tag">LLM</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          Statistics about the Podcast: "Die sogennant Gegenwart". In each episode they play a small game in the beginning. Using an LLM API, I extracted short descriptiones and the scores of each game and aggregated them for some interesting statistics.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/podcast-statistics?ref=piebro.github.io">GitHub</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Personal Spotify Statistics <small>October 2023</small></h2>
-  <a href="https://github.com/piebro/spotify-statistics/stargazers" class="tag star"><span class="star-icon">&#9733;</span>6</a>
-  <a href="?tag=Online Tool" class="tag">Online Tool</a>
-  <a href="?tag=Statistics" class="tag">Statistics</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        Did you ever wonder which artist you listened to the most in your entire years where you used spotify?
-        Well I did.
-        And since you can download your entire streaming history as a few files from spotify it's also possible.
-        This is an online tool where you can open these files and explore your own listening habits.
-        All statistics are only computed locally in the browser.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/spotify-statistics?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/spotify-statistics?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="right-image" style="flex: 0 0 40%;">
-      <img src="images/spotify-statistics_most_played_artists.png" alt="Table of my most played artists in Spotify.">
+  <div class="project">
+    <hr>
+    <h2>GitHub Repo Traffic Stats <small>September 2024</small></h2>
+    <a href="https://github.com/piebro/github-repo-traffic-stats/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Statistics" class="tag">Statistics</a>
+    <a href="?tag=Tool" class="tag">Tool</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          GitHub Repo Traffic Stats is a simple tool to collect and view GitHub repos traffic history longer than 14 days using GitHub Actions.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/github-repo-traffic-stats?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/github-repo-traffic-stats?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="right-image" style="flex: 0 0 40%;">
+        <img src="images/github-repo-traffic-stats_dashboard_screenshot.png" alt="Screenshot of the GitHub Repo Traffic Stats Dashboard.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Factorio Blueprint Visualizations SDXL Lora <small>December 2023</small></h2>
-  <a href="https://huggingface.co/piebro/factorio-blueprint-visualizations-sdxl-lora?likers=true" class="tag star"><span class="star-icon">&#x2665;</span>1</a>
-  <a href="?tag=Factorio" class="tag">Factorio</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <a href="?tag=Stable Diffusion" class="tag">Stable Diffusion</a>
-  <div class="bottom-img-flex">
-    <div class="content-text">
-      <p>
-        I think it's pretty impressive that it is possible today to create realistic looking images using just a prompt.
-        This inspired me to experiment with one of these models to create images similar to the ones I generated with my factorio-blueprint-visualizer project.
-        I gathered a dataset and finetunes the Stable Diffiusion XL model using LoRA technique.
-        With this model, a prompt like "pastel drawing of factorio, symetry" can create a new and imperfect image inspired by the orginial ones.
-      </p>
-      <p>
-        Links: <a href="https://huggingface.co/piebro/factorio-blueprint-visualizations-sdxl-lora">Huggingface</a>, <a href="https://huggingface.co/datasets/piebro/factorio-blueprint-visualizations">Dataset</a>
-      </p>
-    </div>
-    <div class="bottom-image">
-      <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_1.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
-      <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_2.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
-      <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_3.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
-      <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_4.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
+  <div class="project">
+    <hr>
+    <h2>Simple Website Change Detection <small>July 2024</small></h2>
+    <a href="https://github.com/piebro/simple-website-change-detection/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Tool" class="tag">Tool</a>
+    <div class="content-flex">
+      <div class="content-text">
+        <p>
+          A simple GitHub Action tool that runs weekly to check if specified websites or parts of websites have changed.
+          If changes are detected, the GitHub Action fails, triggering a notification for me.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/simple-website-change-detection?ref=piebro.github.io">GitHub</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Physarum Latent Walk <small>March 2021</small></h2>
-  <a href="https://github.com/piebro/physarum-latent-walk/stargazers" class="tag star"><span class="star-icon">&#9733;</span>4</a>  
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <a href="?tag=Machine Learning" class="tag">Machine Learning</a>
-  <div class="bottom-img-flex">
-    <div class="content-text">
-      <p>
-        Inspired by Michael Fogleman's <a href="https://www.michaelfogleman.com/projects/physarum/">Physarum Simulation</a>, I created a dataset of physarum images using the tool he built.
-        I used this dataset to create multiple generative AI model using a residual autoencoder.
-        The videos are created by interpolating between vectors in the latent space of the autoencoders.
-        This technique is also called "latent walk" and works quite well for autoencoders.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/physarum-latent-walk?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/physarum-latent-walk?ref=piebro.github.io">Website</a>, <a href="https://www.kaggle.com/datasets/pietbroemmel/physarum-latent-walk">Dataset</a>
-      </p>
-    </div>
-    <div class="bottom-image">
-      <video src="images/physarum-latent-walk_video_dunes_7_et_linear_seed603519_epoch035_643c36512c928a24b9c724c3d84068c9_512.mp4" autoplay loop></video>
-      <video src="images/physarum-latent-walk_video_giraffe_6_et_linear_seed292382_epoch035_793982556a8558844521c285d116c1d0_512.mp4" autoplay loop></video>
-      <video src="images/physarum-latent-walk_video_plant_cells_6_et_linear_seed703594_epoch035_bd41d6d18cf9324c4a9e2b4ad2beb27e_512.mp4" autoplay loop></video>
-      <video src="images/physarum-latent-walk_video_runes_6_et_noise_seed312575_epoch035_b3e25ec407470890e425d97dd5923042_512.mp4" autoplay loop></video>
+  <div class="project">
+    <hr>
+    <h2>Generated Factorio Friday Facts <small>June 2024</small></h2>
+    <a href="https://github.com/piebro/generated-factorio-friday-facts/stargazers" class="tag star"><span class="star-icon">&#9733;</span>1</a>
+    <a href="?tag=LLM" class="tag">LLM</a>
+    <a href="?tag=Factorio" class="tag">Factorio</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          A small repo to download Factorio Friday Facts and save them as markdown files and use an LLM (Claude 3.5 Sonnet) to generate new blogposts with the older ones as few shot examples and new topics.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/generated-factorio-friday-facts?ref=piebro.github.io">GitHub</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Influx Exhibition <small>Juni 2017</small></h2>
-  <a href="?tag=Exhibition Tool" class="tag">Exhibition</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <a href="?tag=Pen Plotter" class="tag">Pen Plotter</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        <a href="https://www.instagram.com/instazetter/">René Omenzetter</a> and I created an art exhibition plotting ~550 unique apples and hanging them as a grid on walls.
-        We used a random subset of hand-drawn apples from people around the world who played the <a href="https://quickdraw.withgoogle.com">Google Quick, Draw! game</a>.
-        The drawings were plotted with a pen plotter, mimicking the people who drew those apples.
-      </p>
-      <p>
-        Links: <a href="2017_influx_exhibition.html">Website</a>
-      </p>
-    </div>
-    <div class="right-image" style="flex: 0 0 45%;">
-      <img src="images/2017_influx_14.jpg">
+  <div class="project">
+    <hr>
+    <h2>Current Website <small>May 2024</small></h2>
+    <a href="https://github.com/piebro/piebro.github.io/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Personal Website" class="tag">Personal Website</a>
+    <div class="content-flex">
+      <div class="content-text">
+        <p>
+          This website inspired by the design of <a href="https://www.michaelfogleman.com/">www.michaelfogleman.com</a>.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/piebro.github.io?ref=piebro.github.io">GitHub</a>, <a href="index.html?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Static Image Labeling Websites <small>March 2024</small></h2>
-  <a href="https://github.com/piebro/static-image-labeling-websites/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=Online Tool" class="tag">Online Tool</a>
-  <a href="?tag=Machine Learning" class="tag">Machine Learning</a>
-  <div class="content-flex">
-    <div class="content-text">
-      <p>
-        Static, simple and opinionated websites for labeling images for computer vision applications.
-        There is a website to label bounding boxes in images for object detection and one for labeling images for classification.
-        Everything is done locally in the browser without using the internet.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/static-image-labeling-websites?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/static-image-labeling-websites/object-detection-labeling.html?ref=piebro.github.io">Object Detection Website</a>, <a href="https://piebro.github.io/static-image-labeling-websites/classification-labeling.html?ref=piebro.github.io">Image Classification Website</a>
-      </p>
+  <div class="project">
+    <hr>
+    <h2>Pixel Logic Patterns <small>April 2024</small></h2>
+    <a href="https://github.com/piebro/pixel-logic-patterns/stargazers" class="tag star"><span class="star-icon">&#9733;</span>2</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          This is a simple website to generate complex patterns using bitwise operations.
+          It works by evaluating a formula like (x ^ y) % v for every pixel value, where x and y are the coordinates and v is an additional flexible value.
+          If the result of the formula is 0, the pixel is colored white; otherwise, it remains uncolored.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/pixel-logic-patterns?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/pixel-logic-patterns?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="right-image">
+        <img src="images/pixel-logic-pattern-1.png" alt="Example image of Pixel Logic Pattern.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Substitution System <small>February 2024</small></h2>
-  <a href="https://github.com/piebro/substitution-system/stargazers" class="tag star"><span class="star-icon">&#9733;</span>7</a>
-  <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
-  <a href="?tag=Online Tool" class="tag">Online Tool</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <div class="bottom-img-flex">
-    <div class="content-text">
-      <p>
-        This is a simple website to generate generative art using a substitution system.
-        It works by using a random color palette and generating random replacement rules for each color.
-        The replacement rules are a 2x2 grid of random colors from the color palette.
-        A starting 2x2 grid is created, and the replacement rules are applied multiple times to transform the starting grid, doubling the size of the grid in each iteration.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/substitution-system?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/substitution-system?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="bottom-image">
-      <img src="images/substitution-system_plotting_1.jpg" alt="Plotting a Substitution System image.">
-      <img src="images/substitution-system_plotting_2.jpg" alt="Plotted Substitution System image.">
-      <img src="images/substitution-system_example_1024px_01.png" alt="Example image of generative art using the Substitution System.">
-      <img src="images/substitution-system_example_1024px_09.png" alt="Example image of generative art using the Substitution System.">
+  <div class="project">
+    <hr>
+    <h2>Static Image Labeling Websites <small>March 2024</small></h2>
+    <a href="https://github.com/piebro/static-image-labeling-websites/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <a href="?tag=Machine Learning" class="tag">Machine Learning</a>
+    <div class="content-flex">
+      <div class="content-text">
+        <p>
+          Static, simple and opinionated websites for labeling images for computer vision applications.
+          There is a website to label bounding boxes in images for object detection and one for labeling images for classification.
+          Everything is done locally in the browser without using the internet.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/static-image-labeling-websites?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/static-image-labeling-websites/object-detection-labeling.html?ref=piebro.github.io">Object Detection Website</a>, <a href="https://piebro.github.io/static-image-labeling-websites/classification-labeling.html?ref=piebro.github.io">Image Classification Website</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="project"></div>
-  <hr>
-  <h2>Podcast Statistics <small>September 2024</small></h2>
-  <a href="https://github.com/piebro/podcast-statistics/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=LLM" class="tag">LLM</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        Statistics about the Podcast: "Die sogennant Gegenwart". In each episode they play a small game in the beginning. Using an LLM API, I extracted short descriptiones and the scores of each game and aggregated them for some interesting statistics.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/podcast-statistics?ref=piebro.github.io">GitHub</a>
-      </p>
+  
+  <div class="project">
+    <hr>
+    <h2>Substitution System <small>February 2024</small></h2>
+    <a href="https://github.com/piebro/substitution-system/stargazers" class="tag star"><span class="star-icon">&#9733;</span>7</a>
+    <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <div class="bottom-img-flex">
+      <div class="content-text">
+        <p>
+          This is a simple website to generate generative art using a substitution system.
+          It works by using a random color palette and generating random replacement rules for each color.
+          The replacement rules are a 2x2 grid of random colors from the color palette.
+          A starting 2x2 grid is created, and the replacement rules are applied multiple times to transform the starting grid, doubling the size of the grid in each iteration.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/substitution-system?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/substitution-system?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="bottom-image">
+        <img src="images/substitution-system_plotting_1.jpg" alt="Plotting a Substitution System image.">
+        <img src="images/substitution-system_plotting_2.jpg" alt="Plotted Substitution System image.">
+        <img src="images/substitution-system_example_1024px_01.png" alt="Example image of generative art using the Substitution System.">
+        <img src="images/substitution-system_example_1024px_09.png" alt="Example image of generative art using the Substitution System.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project"></div>
-  <hr>
-  <h2>Cutout Textures <small>September 2024</small></h2>
-  <a href="https://github.com/piebro/cutout-textures/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <a href="?tag=Text To Image" class="tag">Text To Image</a>
-  <a href="?tag=LLM" class="tag">LLM</a>
-  <div class="bottom-img-flex">
-    <div class="content-text">
-      <p>
-        A project to create textures by placing cutouts onto a grid with various transformations and randomness.
-        The cutouts are created using Flux.1 [dev] (a text to image model) and the background of each image is automatically removed using another model.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/cutout-textures?ref=piebro.github.io">GitHub</a>
-      </p>
-    </div>
-    <div class="bottom-image">
-      <img src="images/cutout-textures_Tourmaline_crystal,_watermelon_colors,_long_prismatic_form_01_03.png" alt="Example Cutout Texture image.">
-      <img src="images/cutout-textures_a_photo_of_a_big_squid_00_04.png" alt="Example Cutout Texture image.">
-      <img src="images/cutout-textures_a_photo_of_a_coral_01_06.png" alt="Example Cutout Texture image.">
-      <img src="images/cutout-textures_a_photo_of_a_whale_shark_00_07.png" alt="Example Cutout Texture image.">
+  <div class="project">
+    <hr>
+    <h2>Factorio Blueprint Visualizations SDXL Lora <small>December 2023</small></h2>
+    <a href="https://huggingface.co/piebro/factorio-blueprint-visualizations-sdxl-lora?likers=true" class="tag star"><span class="star-icon">&#x2665;</span>1</a>
+    <a href="?tag=Factorio" class="tag">Factorio</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <a href="?tag=Stable Diffusion" class="tag">Stable Diffusion</a>
+    <div class="bottom-img-flex">
+      <div class="content-text">
+        <p>
+          I think it's pretty impressive that it is possible today to create realistic looking images using just a prompt.
+          This inspired me to experiment with one of these models to create images similar to the ones I generated with my factorio-blueprint-visualizer project.
+          I gathered a dataset and finetunes the Stable Diffiusion XL model using LoRA technique.
+          With this model, a prompt like "pastel drawing of factorio, symetry" can create a new and imperfect image inspired by the orginial ones.
+        </p>
+        <p>
+          Links: <a href="https://huggingface.co/piebro/factorio-blueprint-visualizations-sdxl-lora">Huggingface</a>, <a href="https://huggingface.co/datasets/piebro/factorio-blueprint-visualizations">Dataset</a>
+        </p>
+      </div>
+      <div class="bottom-image">
+        <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_1.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
+        <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_2.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
+        <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_3.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
+        <img src="images/factorio-blueprint-visualizations-sdxl-lora_example_4.png" alt="Example image of Factorio Blueprint Visualizations SDXL Lora.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Impossible Architecture <small>December 2020</small></h2>
-  <a href="https://github.com/piebro/plotting-architecture/stargazers" class="tag star"><span class="star-icon">&#9733;</span>1</a>
-  <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        Implementation of <a href="https://inconvergent.net/2018/impossible-architecture/">Impossible Architecture</a> from <a href="https://inconvergent.net/#about">Anders Hoff</a> in python for plotting.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/plotting-architecture?ref=piebro.github.io">GitHub</a>
-      </p>
-    </div>
-    <div class="right-image">
-      <img src="images/plotting-architecture_example_architecture_grid.png" alt="Example image of Impossible Architecture.">
+  <div class="project">
+    <hr>
+    <h2>Plotting Maps <small>December 2023</small></h2>
+    <a href="https://github.com/piebro/plotting-maps/stargazers" class="tag star"><span class="star-icon">&#9733;</span>43</a>
+    <a href="?tag=OpenStreetMap" class="tag">OpenStreetMap</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          This is an online tool to easily use OpenStreetMap to create custom maps.
+          You can upload OSM exports and render them as SVGs consisting only of lines of different objects, making it very pen plotter friendly.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/plotting-maps?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/plotting-maps?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="right-image" style="flex: 0 0 45%;">
+        <img src="images/plotting-maps_plotter_image.jpg" alt="Image of pen plotter plotting a map.">
+      </div>
     </div>
   </div>
-</div>
-
-<div class="project">
-  <hr>
-  <h2>Generated Factorio Friday Facts <small>June 2024</small></h2>
-  <a href="https://github.com/piebro/generated-factorio-friday-facts/stargazers" class="tag star"><span class="star-icon">&#9733;</span>1</a>
-  <a href="?tag=LLM" class="tag">LLM</a>
-  <a href="?tag=Factorio" class="tag">Factorio</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        A small repo to download Factorio Friday Facts and save them as markdown files and use an LLM (Claude 3.5 Sonnet) to generate new blogposts with the older ones as few shot examples and new topics.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/generated-factorio-friday-facts?ref=piebro.github.io">GitHub</a>
-      </p>
+  
+  <div class="project">
+    <hr>
+    <h2>Personal Spotify Statistics <small>October 2023</small></h2>
+    <a href="https://github.com/piebro/spotify-statistics/stargazers" class="tag star"><span class="star-icon">&#9733;</span>6</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <a href="?tag=Statistics" class="tag">Statistics</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          Did you ever wonder which artist you listened to the most in your entire years where you used spotify?
+          Well I did.
+          And since you can download your entire streaming history as a few files from spotify it's also possible.
+          This is an online tool where you can open these files and explore your own listening habits.
+          All statistics are only computed locally in the browser.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/spotify-statistics?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/spotify-statistics?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="right-image" style="flex: 0 0 40%;">
+        <img src="images/spotify-statistics_most_played_artists.png" alt="Table of my most played artists in Spotify.">
+      </div>
     </div>
   </div>
-</div>
-
-<div class="project">
-  <hr>
-  <h2>Pixel Logic Patterns <small>April 2024</small></h2>
-  <a href="https://github.com/piebro/pixel-logic-patterns/stargazers" class="tag star"><span class="star-icon">&#9733;</span>2</a>
-  <a href="?tag=Online Tool" class="tag">Online Tool</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        This is a simple website to generate complex patterns using bitwise operations.
-        It works by evaluating a formula like (x ^ y) % v for every pixel value, where x and y are the coordinates and v is an additional flexible value.
-        If the result of the formula is 0, the pixel is colored white; otherwise, it remains uncolored.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/pixel-logic-patterns?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/pixel-logic-patterns?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="right-image">
-      <img src="images/pixel-logic-pattern-1.png" alt="Example image of Pixel Logic Pattern.">
-    </div>
-  </div>
-</div>
-
-<div class="project">
-  <hr>
-  <h2>Simple Website Change Detection <small>July 2024</small></h2>
-  <a href="https://github.com/piebro/simple-website-change-detection/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=Tool" class="tag">Tool</a>
-  <div class="content-flex">
-    <div class="content-text">
-      <p>
-        A simple GitHub Action tool that runs weekly to check if specified websites or parts of websites have changed.
-        If changes are detected, the GitHub Action fails, triggering a notification for me.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/simple-website-change-detection?ref=piebro.github.io">GitHub</a>
-      </p>
+  
+  <div class="project">
+    <hr>
+    <h2>OpenStreetMap Statistics <small>November 2022</small></h2>
+    <a href="https://github.com/piebro/openstreetmap-statistics/stargazers" class="tag star"><span class="star-icon">&#9733;</span>34</a>
+    <a href="?tag=OpenStreetMap" class="tag">OpenStreetMap</a>
+    <a href="?tag=Statistics" class="tag">Statistics</a>
+    <a href="?tag=Open Data" class="tag">Open Data</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          OpenStreetMap is like Wikipedia but for maps, where everyone can contribute to create a map of the world.
+          This project calculates many different statistics about OpenStreetMap and its contributors.
+          The dataset with plots and tables is updated automatically each month.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/openstreetmap-statistics?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/openstreetmap-statistics?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="right-image" style="flex: 0 0 40%;">
+        <img src="images/openstreetmap-statistics_general_contributor_count_attrition_rate_yearly.png" alt="Barplot of the yearly contributor attrition rate in OSM.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Plotting Ribbons <small>January 2021</small></h2>
-  <a href="https://github.com/piebro/plotting-ribbons/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        A small script to create protein ribbons SVGs for plotting on a pen plotter using <a href="https://github.com/fogleman/ribbon">fogleman/ribbon</a>.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/plotting-ribbons?ref=piebro.github.io">GitHub</a>
-      </p>
-    </div>
-    <div class="right-image">
-      <img src="images/plotting-ribbons_1A08.png" alt="Example image of Plotting Ribbons.">
+  <div class="project">
+    <hr>
+    <h2>2022 Website <small>April 2022</small></h2>
+    <a href="https://github.com/piebro/piebro.github.io/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Personal Website" class="tag">Personal Website</a>
+    <div class="content-flex">
+      <div class="content-text">
+        <p>
+          An earlier version of this website inspired by the design of <a href="https://billwurtz.com/">billwurtz.com</a>.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/piebro.github.io?ref=piebro.github.io">GitHub</a>, <a href="index_2022.html?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project"></div>
-  <hr>
-  <h2>GitHub Repo Traffic Stats <small>September 2024</small></h2>
-  <a href="https://github.com/piebro/github-repo-traffic-stats/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=Statistics" class="tag">Statistics</a>
-  <a href="?tag=Tool" class="tag">Tool</a>
-  <div class="right-img-flex">
-    <div class="content-text">
-      <p>
-        GitHub Repo Traffic Stats is a simple tool to collect and view GitHub repos traffic history longer than 14 days using GitHub Actions.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/github-repo-traffic-stats?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/github-repo-traffic-stats?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="right-image" style="flex: 0 0 40%;">
-      <img src="images/github-repo-traffic-stats_dashboard_screenshot.png" alt="Screenshot of the GitHub Repo Traffic Stats Dashboard.">
+  <div class="project">
+    <hr>
+    <h2>Factorio Blueprint Visualizer <small>November 2021</small></h2>
+    <a href="https://github.com/piebro/factorio-blueprint-visualizer/stargazers" class="tag star"><span class="star-icon">&#9733;</span>139</a>
+    <a href="?tag=Factorio" class="tag">Factorio</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <div class="bottom-img-flex">
+      <div class="content-text">
+        <p>
+          I love the game Factorio, and I really like the look of blueprints after tweaking them for perfection or factories after growing them for many hours.
+          That's why I built an online tool to artfully visualize these factories and blueprints using randomized styles.
+          You can open the website and paste a blueprint string or book to visualize it.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/factorio-blueprint-visualizer?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/factorio-blueprint-visualizer?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="bottom-image">
+        <img src="images/factorio-blueprint-visualizer_example_27.jpg" alt="Example image of generative art.">
+        <img src="images/factorio-blueprint-visualizer_example_21.jpg" alt="Example image of generative art.">
+        <img src="images/factorio-blueprint-visualizer_example_02.jpg" alt="Example image of generative art.">
+        <img src="images/factorio-blueprint-visualizer_random_0077.jpg" alt="Example image of generative art.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>Current Website <small>May 2024</small></h2>
-  <a href="https://github.com/piebro/piebro.github.io/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=Personal Website" class="tag">Personal Website</a>
-  <div class="content-flex">
-    <div class="content-text">
-      <p>
-        This website inspired by the design of <a href="https://www.michaelfogleman.com/">www.michaelfogleman.com</a>.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/piebro.github.io?ref=piebro.github.io">GitHub</a>, <a href="index.html?ref=piebro.github.io">Website</a>
-      </p>
+  <div class="project">
+    <hr>
+    <h2>Physarum Latent Walk <small>March 2021</small></h2>
+    <a href="https://github.com/piebro/physarum-latent-walk/stargazers" class="tag star"><span class="star-icon">&#9733;</span>4</a>  
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <a href="?tag=Machine Learning" class="tag">Machine Learning</a>
+    <div class="bottom-img-flex">
+      <div class="content-text">
+        <p>
+          Inspired by Michael Fogleman's <a href="https://www.michaelfogleman.com/projects/physarum/">Physarum Simulation</a>, I created a dataset of physarum images using the tool he built.
+          I used this dataset to create multiple generative AI model using a residual autoencoder.
+          The videos are created by interpolating between vectors in the latent space of the autoencoders.
+          This technique is also called "latent walk" and works quite well for autoencoders.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/physarum-latent-walk?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/physarum-latent-walk?ref=piebro.github.io">Website</a>, <a href="https://www.kaggle.com/datasets/pietbroemmel/physarum-latent-walk">Dataset</a>
+        </p>
+      </div>
+      <div class="bottom-image">
+        <video src="images/physarum-latent-walk_video_dunes_7_et_linear_seed603519_epoch035_643c36512c928a24b9c724c3d84068c9_512.mp4" autoplay loop></video>
+        <video src="images/physarum-latent-walk_video_giraffe_6_et_linear_seed292382_epoch035_793982556a8558844521c285d116c1d0_512.mp4" autoplay loop></video>
+        <video src="images/physarum-latent-walk_video_plant_cells_6_et_linear_seed703594_epoch035_bd41d6d18cf9324c4a9e2b4ad2beb27e_512.mp4" autoplay loop></video>
+        <video src="images/physarum-latent-walk_video_runes_6_et_noise_seed312575_epoch035_b3e25ec407470890e425d97dd5923042_512.mp4" autoplay loop></video>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>2017 Website <small>August 2017</small></h2>
-  <a href="https://github.com/piebro/little-graveyard/stargazers" class="tag star"><span class="star-icon">&#9733;</span>2</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <a href="?tag=Personal Website" class="tag">Personal Website</a>
-  <div class="bottom-img-flex">
-    <div class="content-text">
-      <p>
-        This is my first website and the start of my programming journey.
-        It features example and live demos of three different generative art algorithms.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/little-graveyard?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/little-graveyard/2017_08_MyWebsite/?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="bottom-image">
-      <img src="images/website_2017_1.png" alt="Example image of generative art.">
-      <img src="images/website_2017_2.png" alt="Example image of generative art.">
-      <img src="images/website_2017_3.png" alt="Example image of generative art.">
-      <img src="images/website_2017_4.png" alt="Example image of generative art.">
+  <div class="project">
+    <hr>
+    <h2>Plotting Ribbons <small>January 2021</small></h2>
+    <a href="https://github.com/piebro/plotting-ribbons/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          A small script to create protein ribbons SVGs for plotting on a pen plotter using <a href="https://github.com/fogleman/ribbon">fogleman/ribbon</a>.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/plotting-ribbons?ref=piebro.github.io">GitHub</a>
+        </p>
+      </div>
+      <div class="right-image">
+        <img src="images/plotting-ribbons_1A08.png" alt="Example image of Plotting Ribbons.">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="project">
-  <hr>
-  <h2>2019 Website <small>January 2019</small></h2>
-  <a href="https://github.com/piebro/little-graveyard/stargazers" class="tag star"><span class="star-icon">&#9733;</span>2</a>
-  <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
-  <a href="?tag=Online Tool" class="tag">Online Tool</a>
-  <a href="?tag=Generative Art" class="tag">Generative Art</a>
-  <a href="?tag=Personal Website" class="tag">Personal Website</a>
-  <div class="bottom-img-flex">
-    <div class="content-text">
-      <p>
-        An earlier website showing genertive art and tools for generating svgs for pen plotters.
-        The arrow-keys can be used to show new images and the s-key to save the images.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/little-graveyard?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/little-graveyard/2019_01_generativeart/?ref=piebro.github.io">Website</a>
-      </p>
-    </div>
-    <div class="bottom-image">
-      <img src="images/website_2019_quickdraw1_38b876.jpg" alt="Example image of generative plotter art.">
-      <img src="images/website_2019_writing2.jpg" alt="Example image of generative plotter art.">
-      <img src="images/website_2019_syncbrush_9716ef.jpg" alt="Example image of generative plotter art.">
-      <img src="images/website_2019_Disortion.jpg" alt="Example image of generative plotter art.">
+  <div class="project">
+    <hr>
+    <h2>Impossible Architecture <small>December 2020</small></h2>
+    <a href="https://github.com/piebro/plotting-architecture/stargazers" class="tag star"><span class="star-icon">&#9733;</span>1</a>
+    <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          Implementation of <a href="https://inconvergent.net/2018/impossible-architecture/">Impossible Architecture</a> from <a href="https://inconvergent.net/#about">Anders Hoff</a> in python for plotting.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/plotting-architecture?ref=piebro.github.io">GitHub</a>
+        </p>
+      </div>
+      <div class="right-image">
+        <img src="images/plotting-architecture_example_architecture_grid.png" alt="Example image of Impossible Architecture.">
+      </div>
     </div>
   </div>
-</div>
-
-<div class="project">
-  <hr>
-  <h2>2022 Website <small>April 2022</small></h2>
-  <a href="https://github.com/piebro/piebro.github.io/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
-  <a href="?tag=Personal Website" class="tag">Personal Website</a>
-  <div class="content-flex">
-    <div class="content-text">
-      <p>
-        An earlier version of this website inspired by the design of <a href="https://billwurtz.com/">billwurtz.com</a>.
-      </p>
-      <p>
-        Links: <a href="https://github.com/piebro/piebro.github.io?ref=piebro.github.io">GitHub</a>, <a href="index_2022.html?ref=piebro.github.io">Website</a>
-      </p>
+  
+  <div class="project">
+    <hr>
+    <h2>2019 Website <small>January 2019</small></h2>
+    <a href="https://github.com/piebro/little-graveyard/stargazers" class="tag star"><span class="star-icon">&#9733;</span>2</a>
+    <a href="?tag=Plotter Art" class="tag">Plotter Art</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <a href="?tag=Personal Website" class="tag">Personal Website</a>
+    <div class="bottom-img-flex">
+      <div class="content-text">
+        <p>
+          An earlier website showing genertive art and tools for generating svgs for pen plotters.
+          The arrow-keys can be used to show new images and the s-key to save the images.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/little-graveyard?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/little-graveyard/2019_01_generativeart/?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="bottom-image">
+        <img src="images/website_2019_quickdraw1_38b876.jpg" alt="Example image of generative plotter art.">
+        <img src="images/website_2019_writing2.jpg" alt="Example image of generative plotter art.">
+        <img src="images/website_2019_syncbrush_9716ef.jpg" alt="Example image of generative plotter art.">
+        <img src="images/website_2019_Disortion.jpg" alt="Example image of generative plotter art.">
+      </div>
     </div>
   </div>
-</div>
 
-<br>
-<br>
-<br>
-<br>
+
+  <div class="project">
+    <hr>
+    <h2>Influx Exhibition <small>Juni 2017</small></h2>
+    <a href="?tag=Exhibition Tool" class="tag">Exhibition</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <a href="?tag=Pen Plotter" class="tag">Pen Plotter</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          <a href="https://www.instagram.com/instazetter/">René Omenzetter</a> and I created an art exhibition plotting ~550 unique apples and hanging them as a grid on walls.
+          We used a random subset of hand-drawn apples from people around the world who played the <a href="https://quickdraw.withgoogle.com">Google Quick, Draw! game</a>.
+          The drawings were plotted with a pen plotter, mimicking the people who drew those apples.
+        </p>
+        <p>
+          Links: <a href="2017_influx_exhibition.html">Website</a>
+        </p>
+      </div>
+      <div class="right-image" style="flex: 0 0 45%;">
+        <img src="images/2017_influx_14.jpg">
+      </div>
+    </div>
+  </div>
+
+  <div class="project">
+    <hr>
+    <h2>2017 Website <small>August 2017</small></h2>
+    <a href="https://github.com/piebro/little-graveyard/stargazers" class="tag star"><span class="star-icon">&#9733;</span>2</a>
+    <a href="?tag=Generative Art" class="tag">Generative Art</a>
+    <a href="?tag=Personal Website" class="tag">Personal Website</a>
+    <div class="bottom-img-flex">
+      <div class="content-text">
+        <p>
+          This is my first website and the start of my programming journey.
+          It features example and live demos of three different generative art algorithms.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/little-graveyard?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/little-graveyard/2017_08_MyWebsite/?ref=piebro.github.io">Website</a>
+        </p>
+      </div>
+      <div class="bottom-image">
+        <img src="images/website_2017_1.png" alt="Example image of generative art.">
+        <img src="images/website_2017_2.png" alt="Example image of generative art.">
+        <img src="images/website_2017_3.png" alt="Example image of generative art.">
+        <img src="images/website_2017_4.png" alt="Example image of generative art.">
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <br>
+  <br>
 </body>
 </html>
