@@ -1,0 +1,28 @@
+name: Run Calculations
+
+on:
+  schedule:
+    # Runs at 16:00 UTC every Monday
+    - cron: '0 16 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-repo-star-count:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run Script
+        run: uv run update_repo_start_count.py
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "noreply@github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add index.html
+          git commit -m "Update star count"
+          git push
