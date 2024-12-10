@@ -1,4 +1,4 @@
-name: Run Calculations
+name: Update Repo Star Count
 
 on:
   schedule:
