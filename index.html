@@ -225,10 +225,8 @@
 
     function parseDate(dateString) {
       const months = {
-        'January': 0, 'Februar': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
+        'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
         'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11,
-        'Januar': 0, 'Februar': 1, 'März': 2, 'Mai': 4, 'Juni': 5,
-        'Juli': 6, 'Oktober': 9, 'Dezember': 11
       };
 
       const [month, year] = dateString.split(' ');
@@ -239,7 +237,7 @@
     document.getElementById('sortStars').addEventListener('click', () => sortProjects('stars'));
     document.getElementById('sortName').addEventListener('click', () => sortProjects('name'));
 
-    sortProjects('stars');
+    sortProjects('date');
   });
 </script>
 
@@ -370,6 +368,29 @@
       </div>
       <div class="right-image" style="flex: 0 0 40%;">
         <img src="images/github-repo-traffic-stats_dashboard_screenshot.png" alt="Screenshot of the GitHub Repo Traffic Stats Dashboard.">
+      </div>
+    </div>
+  </div>
+
+  <div class="project">
+    <hr>
+    <h2>Deutsche Bahn Data <small>July 2024</small></h2>
+    <a href="https://github.com/piebro/deutsche-bahn-data/stargazers" class="tag star"><span class="star-icon">&#9733;</span>5</a>
+    <a href="?tag=Tool" class="tag">Open Data</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          Deutsche Bahn is the biggest train company in Germany.
+          This project collects data from their public API which I use for my <a href="https://github.com/piebro/deutsche-bahn-statistics?ref=piebro.github.io">deutsche-bahn-statistics-project</a>.
+          The data is collected from the ~100 biggest train stations since July 2024.
+          The data is licensed under Attribution 4.0 International (CC BY 4.0) by Deutsche Bahn.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/deutsche-bahn-data?ref=piebro.github.io">GitHub</a>
+        </p>
+      </div>
+      <div class="right-image" style="flex: 0 0 40%;">
+        <img src="images/deutsche-bahn-data_column_info.png" alt="Screenshot of column information about the dataset.">
       </div>
     </div>
   </div>
