@@ -3,7 +3,7 @@ import markdown
 
 def convert_md_to_html():
     # Read the markdown file
-    with open('blog/2025_02_17_generated_ablum_cover_art/index.md', encoding='utf-8') as f:
+    with open('blog/2025_02_17_recreating_album_cover/index.md', encoding='utf-8') as f:
         md_content = f.read()
     
     # Extract title from the first # heading
@@ -41,7 +41,7 @@ def convert_md_to_html():
 </html>
 """
     # Write the HTML file
-    with open('blog/2025_02_17_generated_ablum_cover_art/index.html', 'w', encoding='utf-8') as f:
+    with open('blog/2025_02_17_recreating_album_cover/index.html', 'w', encoding='utf-8') as f:
         f.write(html_template)
 
 if __name__ == "__main__":
