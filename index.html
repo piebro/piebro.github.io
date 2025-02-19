@@ -4,41 +4,12 @@
   <meta charset="utf-8">
   <title>Piet Brömmel</title>
   <script defer data-domain="piebro.github.io" src="https://plausible.io/js/plausible.js"></script>
+  <link rel="stylesheet" href="style.css">
   <style>
-    html {
-      overflow-y: scroll;
-      height: 100%;
-      font: 100%/1.5 sans-serif;
-      word-wrap: break-word;
-      margin: 0 auto;
-      padding: 1.5em;
-      /* font-weight: 400; */
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    @media (min-width: 768px) {
-      html {
-        font-size: 125%;
-        max-width: 55em;
-      }
-    }
-
     h1, h2, h3, h4 {
       margin: 1.5rem 0 0.5rem;
       line-height: 1.25;
       color: #333;
-    }
-
-    a {
-      color: #fa6432;
-      text-decoration: none;
-    }
-
-    a:hover, a:focus, a:active {
-      text-decoration: underline;
     }
 
     p {
@@ -74,6 +45,7 @@
       margin: 0 0.5em 0.5em 0;
       font-size: 0.75em;
       border-radius: 0.25em;
+      text-decoration: none;
     }
 
     .tag.star {
@@ -242,23 +214,15 @@
 </script>
 
 <body>
+<nav style="margin-bottom: 2em;">
+    <a href="index.html" class="nav-link">Projects</a> |
+    <a href="blog/index.html" class="nav-link">Blog Posts</a> |
+    <a href="about.html" class="nav-link">About</a>
+</nav>
 
 <p>
-  Hey! My name is Piet Brömmel.
-  I am a data scientist and engineer, currently living in Düsseldorf, Germany.
-  You can reach me by email at piet.broemmel@gmail.com.
+  Hey! My name is Piet Brömmel. This page highlights my personal software projects.
 </p>
-<p>
-  I love programming and doing side projects.
-  I am interested in open data, statistics, machine learning and generative art.
-</p>
-<p>
-  I'm currently looking for a job in Düsseldorf or remote. My CV is <a href="Piet_Broemmel_CV.pdf">here</a>.
-</p>
-<p>
-  Links: <a href="https://github.com/piebro">GitHub</a>, <a href="https://huggingface.co/piebro">Huggingface</a>
-</p>
-
 
 <div class="sort-buttons">
   <button id="sortDate">Sort by Date</button>

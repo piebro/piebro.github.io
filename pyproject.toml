@@ -1,0 +1,28 @@
+[project]
+name = "piebro.github.io"
+version = "0.0.1"
+description = "Personal website scripts"
+requires-python = ">=3.10"
+dependencies = [
+    "ruff",
+    "markdown", 
+]
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+select = [
+    "F",        # Pyflakes
+    "UP",       # pyupgrade
+    "B018",     # Found useless expression.
+    "I",        # isort
+    "RUF",      # ruff
+]
+ignore = [
+  "E501", # line too long - will be fixed in format
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

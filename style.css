@@ -1,0 +1,49 @@
+html {
+    overflow-y: scroll;
+    height: 100%;
+    font: 100%/1.5 sans-serif;
+    word-wrap: break-word;
+    margin: 0 auto;
+    padding: 1.5em;
+    /* font-weight: 400; */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    margin: 2.5em 0 2.5em 0;
+  }
+
+@media (min-width: 768px) {
+    html {
+        font-size: 125%;
+        max-width: 55em;
+    }
+}
+
+nav {
+    margin-bottom: 2em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5em;
+    text-align: center;
+}
+
+.nav-link {
+    color: #555;
+    margin: 0 0.5em;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.nav-link:first-child {
+    margin-left: 0;
+}
+
+.nav-link:hover {
+    color: #fa6432;
+    text-decoration: none;
+}

@@ -1,0 +1,52 @@
+@media (min-width: 768px) {
+    html {
+        font-size: 100%;
+        max-width: 65em;
+    }
+    nav {
+        font-size: 125%;
+    }
+}
+h1 {
+    text-align: center;
+    padding: 0 0 1em 0;
+}
+pre {
+    background-color: #f6f8fa;
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+code {
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+details {
+    margin: 1em 0;
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+summary {
+    cursor: pointer;
+    padding: 0.5em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 2em;
+}
+
+.date {
+    color: #666;
+    font-size: 0.9em;
+    margin-left: 1em;
+}
+
+.description {
+    margin-top: 0.5em;
+    color: #444;
+}
