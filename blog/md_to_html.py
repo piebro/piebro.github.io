@@ -1,9 +1,11 @@
+import pathlib
+
 import markdown
 
 
-def convert_md_to_html():
+def convert_md_to_html(md_file_path):
     # Read the markdown file
-    with open('blog/2025_02_17_recreating_album_cover/index.md', encoding='utf-8') as f:
+    with open(md_file_path, encoding='utf-8') as f:
         md_content = f.read()
     
     # Extract title from the first # heading
@@ -37,12 +39,31 @@ def convert_md_to_html():
     <a href="../../about.html" class="nav-link">About</a>
 </nav>
 {html_content}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 </body>
 </html>
 """
-    # Write the HTML file
-    with open('blog/2025_02_17_recreating_album_cover/index.html', 'w', encoding='utf-8') as f:
+    # Write the HTML file to the same directory as the markdown file
+    html_file_path = md_file_path.with_suffix('.html')
+    with open(html_file_path, 'w', encoding='utf-8') as f:
         f.write(html_template)
 
+def process_blog_directory():
+    blog_dir = pathlib.Path('blog')
+    
+    # Find all directories in the blog folder
+    for dir_path in blog_dir.iterdir():
+        if dir_path.is_dir():
+            # Check if index.md exists in the directory
+            md_file = dir_path / 'index.md'
+            if md_file.exists():
+                print(f"Converting {md_file}")
+                convert_md_to_html(md_file)
+
 if __name__ == "__main__":
-    convert_md_to_html()
+    process_blog_directory()
