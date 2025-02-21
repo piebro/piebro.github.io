@@ -12,13 +12,14 @@ h1 {
     padding: 0 0 1em 0;
 }
 pre {
-    background-color: #f6f8fa;
+    background-color: #e7e7e7;
     padding: 16px;
     border-radius: 6px;
     overflow-x: auto;
 }
 code {
     font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    background-color: #e7e7e7;
 }
 details {
     margin: 1em 0;
