@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using DuckDB for OpenStreetMap Statistics</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../style.css">
+    <script defer data-domain="piebro.github.io" src="https://plausible.io/js/plausible.js"></script>
+</head>
+<body>
+<nav>
+    <a href="../../index.html" class="nav-link">Projects</a> |
+    <a href="../index.html" class="nav-link">Blog Posts</a> |
+    <a href="../../about.html" class="nav-link">About</a>
+</nav>
+<h1>Using DuckDB for OpenStreetMap Statistics</h1>
+<p>About 3 years ago I was searching for up to date information about which Editors are used for adding data to OpenStreetMap. After I couldn't find any I <a href="https://github.com/piebro/openstreetmap-statistics">created my own scripts</a> for generating tables and data from the OSM Changeset Dataset.</p>
+<h2>Using Pandas and Dask</h2>
+<p>The original data is saved in one compressed .xml file, so the first step is to extract and save it as table. I started with using csv and then switched to parquet and partitioning by month. After more preprocessing I get a dataset with the size of ~2.5GB.</p>
+<p>I got a lot of out of memory errors trying to analyze the data using pandas, so I switched to Dask to use a similar python api without needing to load all data in memory. This worked well, but many queries were quite slow and I started caching many intermediate results that were used by different queries and after looking at the code more than a year later I realized the whole codebase was a pretty big mess.</p>
+<h2>Switching to DuckDB</h2>
+<p>A few months ago I was thinking about using a different approach. I am using some SQL at my new day job and kept hearing about DuckDB performance and ease of use. I did a test to check if DuckDB can handle querying the data on my laptop and in the smallest GitHub Action Runner in a reasonable amount of time and it did!</p>
+<p>This allows me to make a big and painfully long refactor of the codebase and treat every table and plot as one SQL Query instead of caching intermediate results. I also removed many abstractions, so that every query is atomic and a lot easier to understand. All in all, I'm pretty happy with the setup right now.</p>
+<h2>Benchmarking DuckDB Versions</h2>
+<p>After reading about some performance gains of DuckDB 1.4 (I am using DuckDB 1.3.2 right now), I was curious how this would affect me. I ran a simple benchmark running all Notebooks using the different DuckDB versions (using e.g. <code>uv run --with "duckdb==1.1.*"</code> makes this straightforward) and here are the results:</p>
+<p><img alt="img" src="execution_times_comparison.png" /></p>
+<p>Queries are mostly getting faster with newer version with the exception of the 09_tags Notebook. It's the only Notebook that uses <code>unnest(["array","of","strings","..."])</code> a lot, so this might explain why it's an outlier. In general the biggest performance gain was between version 1.2 and 1.3 and I'm not sure if I would have started using DuckDB for this project if it was still as slow as the 1.2 version.</p>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</body>
+</html>

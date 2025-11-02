@@ -51,3 +51,8 @@ li {
     margin-top: 0.5em;
     color: #444;
 }
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
