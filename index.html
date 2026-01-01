@@ -3,7 +3,13 @@
 <head>
   <meta charset="utf-8">
   <title>Piet Brömmel</title>
-  <script defer data-domain="piebro.github.io" src="https://plausible.io/js/plausible.js"></script>
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-8rGQy8jjaWqcoLlqMYIMD.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
+
   <link rel="stylesheet" href="style.css">
   <style>
     h1, h2, h3, h4 {
@@ -250,6 +256,31 @@
         <p>
           Links: <a href="https://github.com/piebro/personal-plotting-util?ref=piebro.github.io">GitHub</a>
         </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="project">
+    <hr>
+    <h2>Wikidata Extraction <small>January 2026</small></h2>
+    <a href="https://github.com/piebro/wikidata-extraction/stargazers" class="tag star"><span class="star-icon">&#9733;</span>0</a>
+    <a href="?tag=Open Data" class="tag">Open Data</a>
+    <a href="?tag=Online Tool" class="tag">Online Tool</a>
+    <div class="right-img-flex">
+      <div class="content-text">
+        <p>
+          A toolkit for extracting and querying structured data from Wikidata.
+          It converts Wikidata's N-Triples dump into Parquet files for efficient querying with DuckDB, and provides data extraction pipelines for specific entity types (Spotify artists, YouTube channels, Letterboxd films, etc.).
+        </p>
+        <p>  
+          There is also a website to get random entities using DuckDB WASM querying the .parquet files on Huggingface. It can be a lot of fun to just explore random artists, YouTube channels or other stuff.
+        </p>
+        <p>
+          Links: <a href="https://github.com/piebro/wikidata-extraction?ref=piebro.github.io">GitHub</a>, <a href="https://piebro.github.io/wikidata-extraction?ref=piebro.github.io">Website</a>, <a href="https://huggingface.co/datasets/piebro/wikidata-extraction">Hugging Face Dataset</a>
+        </p>
+      </div>
+      <div class="right-image" style="flex: 0 0 35%;">
+        <img src="images/wikidata-extraction_screenshot.png" width="710" height="898" alt="Screenshot of the Wikidata Extraction website showing random entities.">
       </div>
     </div>
   </div>
